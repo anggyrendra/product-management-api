@@ -1,0 +1,21 @@
+# .NET build output
+bin/
+obj/
+
+# IDE files
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Dotnet install (local in this sandbox)
+.dotnet/

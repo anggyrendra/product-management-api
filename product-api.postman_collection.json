@@ -1,0 +1,165 @@
+{
+  "info": {
+    "name": "Product Management API",
+    "_postman_id": "product-api-collection",
+    "description": "Postman collection for the Product Management API (Backend Developer Coding Test). Import this file into Postman to test all endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refreshToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api", "auth", "register"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"john_doe\",\n  \"password\": \"supersecret\",\n  \"password_confirmation\": \"supersecret\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.data && json.data.authentication_token) {",
+                  "  pm.collectionVariables.set('authToken', json.data.authentication_token);",
+                  "  pm.collectionVariables.set('refreshToken', json.data.refresh_token);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"john_doe\",\n  \"password\": \"supersecret\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.data && json.data.authentication_token) {",
+                  "  pm.collectionVariables.set('authToken', json.data.authentication_token);",
+                  "  pm.collectionVariables.set('refreshToken', json.data.refresh_token);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/refresh", "host": ["{{baseUrl}}"], "path": ["api", "auth", "refresh"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh_token\": \"{{refreshToken}}\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Get All Products",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/products?search=&category=&limit=10&page=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products"],
+              "query": [
+                { "key": "search", "value": "" },
+                { "key": "category", "value": "" },
+                { "key": "limit", "value": "10" },
+                { "key": "page", "value": "1" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Product By ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/products/1", "host": ["{{baseUrl}}"], "path": ["api", "products", "1"] }
+          }
+        },
+        {
+          "name": "Create Product (auth required)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/products", "host": ["{{baseUrl}}"], "path": ["api", "products"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Awesome T-Shirt\",\n  \"price\": 99.99,\n  \"description\": \"High-quality cotton t-shirt\",\n  \"category\": \"Clothes\",\n  \"images\": [\"https://placeimg.com/640/480/any\"]\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Product (auth required)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/products/1", "host": ["{{baseUrl}}"], "path": ["api", "products", "1"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Awesome T-Shirt Updated\",\n  \"price\": 89.99\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Product (auth required)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/products/1", "host": ["{{baseUrl}}"], "path": ["api", "products", "1"] }
+          }
+        }
+      ]
+    }
+  ]
+}

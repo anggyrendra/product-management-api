@@ -1,0 +1,31 @@
+# =============================================================================
+# docker-compose.yml
+# Builds and runs the Product Management API in a container, mapping the
+# container's port 8080 to the host's port 8080.
+# =============================================================================
+version: "3.8"
+
+services:
+  product-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: product-api
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://0.0.0.0:8080
+      # JWT settings can be overridden via environment variables.
+      - Jwt__Key=SuperSecretProductApiKey_2025_WithAtLeast32Chars!!
+      - Jwt__Issuer=ProductApi
+      - Jwt__Audience=ProductApi
+      - Jwt__AccessTokenMinutes=15
+      - Jwt__RefreshTokenDays=7
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
