@@ -1,4 +1,4 @@
-# Product Management API — Backend Developer Coding Test (C# / ASP.NET Core 8)
+# Product Management API — Backend (C# / ASP.NET Core 8)
 
 A REST API for product management and authentication built with **C# / .NET 8 / ASP.NET Core**.
 It implements all features required by the recruitment test specification:
